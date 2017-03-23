@@ -6,6 +6,12 @@ Requirements:
 - **PHP5**
 - **PHP SQLITE 3**
 
+
+Code contrinbutors
+------------------
+- Nos
+- [ander7agar](https://github.com/ander7agar)
+
 License:
 --------
 
