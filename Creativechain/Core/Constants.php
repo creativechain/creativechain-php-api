@@ -8,7 +8,7 @@
 
 namespace Creativechain\Core;
 
-define('BITCOIN_IP', '80.241.212.178'); // IP address of your bitcoin node
+define('BITCOIN_IP', '0.0.0.0'); // IP address of your bitcoin node
 define('BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
 
 if (BITCOIN_USE_CMD) {
@@ -16,8 +16,8 @@ if (BITCOIN_USE_CMD) {
 
 } else {
     define('BITCOIN_PORT', '19037'); // leave empty to use default port for mainnet/testnet
-    define('BITCOIN_USER', 'Creativecoinrpc'); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
-    define('BITCOIN_PASSWORD', '7T4jXbct78WBvgujHM6Es5bEChwDooRqLH8FtpYmiiX'); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
+    define('BITCOIN_USER', 'myrpcuser'); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
+    define('BITCOIN_PASSWORD', 'myrpcpassword'); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
 }
 
 
