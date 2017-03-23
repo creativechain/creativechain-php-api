@@ -7,7 +7,7 @@ Requirements:
 - **PHP SQLITE 3**
 
 
-Code contrinbutors
+Code contributors
 ------------------
 - Nos
 - [ander7agar](https://github.com/ander7agar)
