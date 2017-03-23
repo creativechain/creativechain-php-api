@@ -29,3 +29,5 @@ define('MAX_BLOCKS', 10); // maximum number of blocks to try when retrieving dat
 
 define('NET_TIMEOUT_CONNECT', 5); // how long to time out when connecting to bitcoin node
 define('NET_TIMEOUT_RECEIVE', 10); // how long to time out retrieving data from bitcoin node
+
+define('DATABASE_NAME', 'creativechain.db'); //SQLITE database name

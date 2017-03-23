@@ -23,7 +23,7 @@ class Creativecoin {
      */
     public function __construct()  {
         $this->rpcClient = new RPCClient();
-        $this->database = new Database('./test.db');
+        $this->database = new Database(DATABASE_NAME);
     }
 
     public function getDataFromReference($ref) {
