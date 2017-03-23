@@ -9,7 +9,7 @@ Requirements:
 
 Code contributors
 ------------------
-- Nos
+- [nOsDelAbismo](https://github.com/nOsDelAbismo)
 - [ander7agar](https://github.com/ander7agar)
 
 License:
