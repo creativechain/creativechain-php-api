@@ -1,18 +1,13 @@
 <?php
 
-namespace Creativecoin\Core;
-use Creativecoin\Core\DB\Database;
-use Creativecoin\Util\Integers;
-use Creativecoin\Util\Sorter;
-use Creativecoin\Util\TxBuffer;
-use Creativecoin\Util\Util;
+namespace Creativechain\Core;
+use Creativechain\DB\Database;
+use Creativechain\Util\Integers;
+use Creativechain\Util\Sorter;
+use Creativechain\Util\TxBuffer;
+use Creativechain\Util\Util;
 
-/**
- * Created by PhpStorm.
- * User: ander
- * Date: 22/03/17
- * Time: 19:49
- */
+
 class Creativecoin {
 
     /** @var  RPCClient */
@@ -35,7 +30,7 @@ class Creativecoin {
 
         $decoraw = $this->rpcClient->getTransaction($ref);
         $txdata = '';
-        //print_r($decoraw);
+
         foreach($decoraw['vout'] as $key=>$value){
 
             if($value['scriptPubKey']['hex']){
@@ -47,15 +42,13 @@ class Creativecoin {
 
         $txdata = explode("-CREA-", $txdata);
 
-        //echo $txdata;
         $txids = json_decode($txdata[1]);
         $opdata = '';
-        //print_r($txids);
+
         foreach($txids->txids as $key2=>$value2){
-            //echo $value2."\n";
-            //sleep(1);
+
             $decoraw = $this->rpcClient->getTransaction($value2);
-            //var_dump($decoraw);
+
             foreach($decoraw['vout'] as $key3=>$value3){
                 if($value3['scriptPubKey']['type'] == "nulldata"){
                     $opdataP = strval(Util::hex2str($value3['scriptPubKey']['hex']));
@@ -87,8 +80,6 @@ class Creativecoin {
 
         $index = json_decode($opdata);
 
-
-        //$opdata=strip_tags($opdata);
         $opdata = explode('-CREA-"', $opdata);
 
         return $opdata[1];
@@ -112,14 +103,6 @@ class Creativecoin {
         if ($data_len == 0)
             return array('error' => 'Some data is required to be stored');
 
-        //$addrall=OP_RETURN_bitcoin_cmd('getaddressesbyaccount', $testnet);
-        //$addrall=json_decode($addrall);
-
-
-        //$change_address=$addrall[0];
-
-
-        //echo $change_address;
         //	Calculate amounts and choose first inputs to use
 
         $output_amount = BTC_FEE * ceil($data_len/MAX_BYTES); // number of transactions required
@@ -131,14 +114,8 @@ class Creativecoin {
         $inputs = $inputs_spend['inputs'];
         $input_amount = $inputs_spend['total'];
 
-
-        //	Find the current blockchain height and mempool txids
-
         $height=$this->rpcClient->getBlockCount();
         $avoid_txids=$this->rpcClient->getRawMemPool();
-
-        //echo "---".$height."---";
-        //var_dump($avoid_txids);
 
         //	Loop to build and send transactions
 
@@ -150,32 +127,27 @@ class Creativecoin {
 
             $last_txn = (($data_ptr+MAX_BYTES) >= $data_len); // is this the last tx in the chain?
             $change_amount = $input_amount-BTC_FEE;
-            //echo $change_amount."\n";
+
             $metadata = substr($data, $data_ptr, MAX_BYTES-6);
             $metadata = "-CREA-".$metadata;
-            //	echo "---- metadata : $metadata ---";
+
             //	Build and send this transaction
 
             $outputs = array();
-            //if ($change_amount >= OP_RETURN_BTC_DUST) // might be skipped for last transaction
+
             $outputs[$change_address] = $change_amount;
 
             $raw_txn =  $this->createTransaction($inputs, $outputs, $metadata, $last_txn ? count($outputs) : 0);
-            //var_dump($raw_txn);
-            //var_dump($inputs);
-            //var_dump($outputs);
-            //	var_dump($last_txn);
-            //	var_dump($raw_txn);
 
             $send_result =  $this->signAndSend($raw_txn);
 
             //	Check for errors and collect the txid
-            //var_dump($send_result);
+
             if (isset($send_result['error'])) {
                 $result['error'] = $send_result['error'];
                 break;
             }
-            //echo $send_result['txid'];
+
             $result['txids'][] = $send_result['txid'];
             sleep(1);
             if ($data_ptr == 0)
@@ -191,8 +163,6 @@ class Creativecoin {
             $input_amount = $change_amount;
         }
 
-
-        //print_r($result);
         //	Return the final result
 
         return $result;
@@ -299,13 +269,12 @@ class Creativecoin {
 
     public function signAndSend($raw_txn) {
         $signed_txn = $this->rpcClient->signRawTransaction($raw_txn);
-        //var_dump($raw_txn);
-        //var_dump($signed_txn);
+
         if (!$signed_txn['complete'])
             return array('error' => 'Could not sign the transaction');
 
         $send_txid = $this->rpcClient->sendRawTransaction($signed_txn['hex']);
-        //var_dump($send_txid);
+
         if (strlen($send_txid) != 64)
             return array('error' => 'Could not send the transaction txid:'.$send_txid.' raw : '.$send_txid);
 
@@ -344,7 +313,6 @@ class Creativecoin {
             return array('error' => 'Not enough funds are available to cover the amount and fee');
 
         //	Return the successful result
-        //var_dump($inputs_spend);
 
         return array(
             'inputs' => $inputs_spend,
@@ -570,8 +538,6 @@ class Creativecoin {
 
         }
         $nsigns = $_POST['datos']['members'];
-        //	print_r($multisig);
-        //	echo json_encode($pubkeys);
 
         $pubk = addslashes(json_encode($pubkeys));
 
@@ -610,7 +576,7 @@ class Creativecoin {
         if(!empty($lastblock['block'])){
 
             $block = $lastblock['block'];
-            //echo $block;
+
             $blocks =  $this->rpcClient->listSinceBlock($block);
             print_r($blocks);
         }else{
@@ -618,16 +584,8 @@ class Creativecoin {
             $blocks = $this->rpcClient->listSinceBlock($startHash);
         }
 
-        //$starthash = OP_RETURN_bitcoin_cmd('getblockhash', 0,0);
-        //$blocks = OP_RETURN_bitcoin_cmd('listsinceblock', 0,$starthash);
         print_r($blocks);
         foreach($blocks['transactions'] as $key=>$value){
-            //echo "\n\n";
-            //echo $value['address']."\n";
-            //echo $value['amount']."\n";
-            //echo $value['time']."\n";
-            //echo $value['blockhash']."\n";
-            //echo $value['txid']."\n";
 
             $txdata = $this->rpcClient->getTransaction($value['txid']);
 
@@ -636,12 +594,12 @@ class Creativecoin {
                     $this->database->addAddressTransaction($value3, $value['txid'], $value2['value'], $value['time'], $value['blockhash']);
                 }
             }
-            //print_R($txdata);
+
             if(!empty($value['blockhash'])){
                 $this->database->addAddressTransaction($value['address'], $value['txid'], $value['amount'], $value['time'], $value['blockhash']);
 
                 $txdata = $this->getDataFromReference($value['txid']);
-                //echo $txdata;
+
                 $decodata = json_decode("[".$txdata."]");
                 print_r($decodata);
                 if(!empty($decodata[0]->contract)){

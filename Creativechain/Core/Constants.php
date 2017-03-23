@@ -6,13 +6,13 @@
  * Time: 21:12
  */
 
-namespace Creativecoin\Core;
+namespace Creativechain\Core;
 
 define('BITCOIN_IP', '80.241.212.178'); // IP address of your bitcoin node
 define('BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
 
 if (BITCOIN_USE_CMD) {
-    define('BITCOIN_PATH', '/home/creativechain2/src/Creativecoin'); // path to Creativecoin executable on this server
+    define('BITCOIN_PATH', '/home/creativechain2/src/Creativechain'); // path to Creativechain executable on this server
 
 } else {
     define('BITCOIN_PORT', '19037'); // leave empty to use default port for mainnet/testnet

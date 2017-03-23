@@ -1,15 +1,9 @@
 <?php
 
-namespace Creativecoin\DB;
+namespace Creativechain\DB;
+
 use SQLite3;
 use SQLite3Result;
-
-/**
- * Created by PhpStorm.
- * User: ander
- * Date: 21/03/17
- * Time: 19:29
- */
 
 class Database {
 

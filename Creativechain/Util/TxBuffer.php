@@ -1,12 +1,8 @@
 <?php
 
-namespace Creativecoin\Util;
-/**
- * Created by PhpStorm.
- * User: ander
- * Date: 23/03/17
- * Time: 14:58
- */
+namespace Creativechain\Util;
+
+
 class TxBuffer {
 
     private $data;

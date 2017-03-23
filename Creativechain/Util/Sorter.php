@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ander
- * Date: 23/03/17
- * Time: 15:52
- */
 
-namespace Creativecoin\Util;
+
+namespace Creativechain\Util;
 
 
 class Sorter

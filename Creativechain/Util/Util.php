@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ander
- * Date: 23/03/17
- * Time: 16:31
- */
 
-namespace Creativecoin\Util;
+namespace Creativechain\Util;
 
 
 class Util {

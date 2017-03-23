@@ -1,13 +1,7 @@
 <?php
 
-namespace Creativecoin\Core;
+namespace Creativechain\Core;
 
-/**
- * Created by PhpStorm.
- * User: ander
- * Date: 21/03/17
- * Time: 22:15
- */
 class RPCClient
 {
 
