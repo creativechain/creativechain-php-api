@@ -17,12 +17,6 @@ This Library is to search and save in blockchain.
 
 * View in <a href="https://dev.creativechain.net/" target="_blank" >apidoc</a>
 
-**ABOUT**
-
-This Library has been created by :
-  * Vicent Nos @nOsDelAbismo
-  * Andersson Gabriel @ander7agar
-  * Sheila Mundo @sheilapimpampum
   
 **License:**
   
