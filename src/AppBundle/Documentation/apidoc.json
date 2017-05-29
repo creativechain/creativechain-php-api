@@ -1,0 +1,23 @@
+
+{
+  "name": "Trantor",
+  "version": "1.0.0",
+  "description": "Documentation of search blockchain",
+  "title": "Trantor REST API",
+  "url" : "https://api.creativechain.net/",
+  "sampleUrl" : "https://api.creativechain.net/app_dev.php",
+  "header": {
+    "title": "Trantor API",
+    "filename": "header.md"
+  },
+  "footer": {
+    "filename": "footer.md"
+  },
+  "order": [
+    "Database"
+  ],
+  "template": {
+    "withCompare": true,
+    "withGenerator": false
+  }
+}

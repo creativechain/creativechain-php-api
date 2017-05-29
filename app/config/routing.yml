@@ -1,0 +1,7 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+trantor_api:
+    resource: "@AppBundle/Resources/config/routing.yml"
+    prefix:   /

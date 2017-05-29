@@ -1,3 +1,10 @@
-/test.db
-/Test.php
+/web/bundles/
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+/vendor/
+/bin/
+/app/bootstrap*
 /.idea/
