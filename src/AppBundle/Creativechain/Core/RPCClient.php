@@ -34,8 +34,6 @@ define('NET_TIMEOUT_RECEIVE', 10); // how long to time out retrieving data from 
 
 class RPCClient
 {
-
-
     private $user;
     private $password;
     private $port;
@@ -111,7 +109,12 @@ class RPCClient
     public function validateAddress($address) {
         return $this->buildExecution('validateaddress', array($address));
     }
-
+    public function getNewAddress() {
+        return $this->buildExecution('getnewaddress', array(0));
+    }
+    public function getReceivedByAddress($address) {
+        return $this->buildExecution('getreceivedbyaddress', array($address));
+    }
     /**
      * @return bool
      */
