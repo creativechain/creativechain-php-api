@@ -26,6 +26,10 @@ class amount
      * @ORM\Column(type="string" , nullable=true)
      */
     protected $address;
+    /**
+     * @ORM\Column(type="string" , nullable=true)
+     */
+    protected $data;
 
 
 
@@ -83,6 +87,21 @@ class amount
         $this->address = $address;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
 
 }
-

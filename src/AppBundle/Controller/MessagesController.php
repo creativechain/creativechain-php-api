@@ -7,6 +7,7 @@
  **************************************************************/
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\amount;
 use AppBundle\Entity\inputWords;
 use AppBundle\Entity\groups;
 use AppBundle\Controller\TrantorCoreController;
@@ -16,7 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Creativechain\Core\Creativecoin;
+use AppBundle\Creativechain\Core\RPCClient;
 use AppBundle\Creativechain\Core;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 
 class MessagesController extends Controller
 {
@@ -36,10 +40,128 @@ class MessagesController extends Controller
             $em->flush();
         }
     }
+    public function saveDataDirectlyAction(Request $request){
+        $data=$request->get('data');
+        if($data->title){
+            $creativecoin = new Creativecoin();
+            $data = json_decode($data);
+            $result = $creativecoin->storeData($data);
+            $ref = $result['ref'];
+            $results = $this->indexAction($ref,$data->title);
+        }else{
+            $results = "missing data";
+        }
+        $response = new Response(json_encode(array('results' => $results)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    public function CredentialsAction(Request $request)
+    {
+        $session = new Session();
+        $session->start();
 
-    public function saveAction(Request $request){
-        $ref=$request->get('ref');
-        $word=$request->get('input');
+        $ip=$request->get('ip');
+        $port=$request->get('port');
+        $user=$request->get('user');
+        $password=$request->get('password');
+
+        // set and get session attributes
+        $session->set('ip', $ip);
+        $session->set('port', $port);
+        $session->set('user', $user);
+        $session->set('password', $password);
+
+        $response = new Response(json_encode(array('results' => 'Ok')));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    public function generatePayAddressAction(Request $request){
+        $json=$request->get('data');
+        $addressPay = new Creativecoin();
+        $result = $addressPay->getAddressPay($json);
+        $addessNew = $result['address'];
+        $price = $result['price'];
+        $em = $this->getDoctrine()->getManager();
+        $amount = new amount();
+        $amount->setAddress($addessNew);
+        $amount->setData($json);
+        $amount->setAmount($price);
+        $em->persist($amount);
+        $em->flush();
+        $response = new Response(json_encode(array('address' => $addessNew, 'amount' => $price)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    }
+
+    public function validatePayAction(Request $request){
+        $call = new RPCClient();
+        $torna ="";
+
+        $address=$request->get('address');
+
+        $em = $this->getDoctrine()->getManager();
+        $Repo = $em->getRepository("AppBundle:amount");
+        $consulta = $Repo->findOneBy(array('address' => $address));
+        if($consulta){
+            $amount = $consulta->getAmount();
+            $datos = $consulta->getData();
+
+            $balance = $call->getReceivedByAddress($address);
+
+            if ($amount >= $balance){
+                $datosdec=json_decode($datos);
+                $data_len=intval(ceil(strlen($datos)/1000));
+
+                $fee_price=20000;
+                $amount = $data_len*$fee_price;
+
+                $creativecoin = new Creativecoin();
+                if($amount>0){
+                    if ($balance == false) {
+                        $balance = 0;
+                    }
+                    if ($balance>=floatval($amount)) {
+                        $datosT = $creativecoin->storeData($datos);
+                        $transactions=json_encode($datosT);
+                        $datosI =  $creativecoin->storeData($datos);
+                        $ref = $datosI['ref'];
+
+                        $index=json_encode($datosI);
+                        $data=json_decode($datos);
+
+                        if(!empty($datos)){
+                            if(strlen($datosI['ref'])>2 and strlen($datosT['ref'])>2){
+                                $this->indexAction($ref,$data->type);
+                                $em->remove($consulta);
+                                $em->persist($consulta);
+                                $em->flush();
+                            }
+                        }
+                        $torna =  json_encode(array('payment' => 'ok', 'CREA' => floatval($balance)/1e8, 'price'=>floatval($amount)/1e8, 'transactions'=>$transactions, 'ref'=>$index, 'data'=>$datos));
+                        session_destroy();
+                    }
+                    if($balance<floatval($amount)) {
+                        $torna =  json_encode(array('payment' => 'wait', 'CREA' => floatval($balance)/1e8, 'price'=>floatval($amount)/1e8));
+                    }
+                }
+                else {
+                    $torna =  json_encode(array('payment' => 'wait', 'CREA' => floatval($balance)));
+                }
+            }else{
+                $torna = "The amount it's incomplete";
+            }
+        }
+        else{
+            $torna = "This Address isn't registered";
+        }
+
+        return $torna;
+    }
+
+    public function indexAction($ref, $word){
+        //$ref=$request->get('ref');
+        //$word=$request->get('input');
         $client = new TrantorCoreController();
         $client->setContainer($this->container);
         $em = $this->getDoctrine()->getManager();
