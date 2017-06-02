@@ -3,12 +3,28 @@ Search:
     defaults: { _controller: AppBundle\Controller\MessagesController::searchAction }
     requirements:
         _method: GET
-
-save:
-    path:  /save
-    defaults: { _controller: AppBundle\Controller\MessagesController::saveAction }
+index:
+    path:  /index
+    defaults: { _controller: AppBundle\Controller\MessagesController::indexAction }
     requirements:
         _method: GET
-
-
-
+pay:
+    path:  /pay
+    defaults: { _controller: AppBundle\Controller\MessagesController::generatePayAddressAction }
+    requirements:
+        _method: GET
+validatePay:
+    path:  /validatePay
+    defaults: { _controller: AppBundle\Controller\MessagesController::validatePayAction }
+    requirements:
+        _method: GET
+saveDataDirectly:
+    path:  /saveDataDirectly
+    defaults: { _controller: AppBundle\Controller\MessagesController::saveDataDirectlyAction }
+    requirements:
+        _method: GET
+Credentials:
+    path:  /credentials
+    defaults: { _controller: AppBundle\Controller\MessagesController::CredentialsAction }
+    requirements:
+        _method: GET
