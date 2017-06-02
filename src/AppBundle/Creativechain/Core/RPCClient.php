@@ -8,29 +8,29 @@
 
 namespace AppBundle\Creativechain\Core;
 
-define('BITCOIN_IP', ''); // IP address of your bitcoin node
+define('BITCOIN_IP', '80.241.212.178'); // IP address of your bitcoin node
 define('BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
 
 if (BITCOIN_USE_CMD) {
-    define('BITCOIN_PATH', ''); // path to Creativechain executable on this server
+    define('BITCOIN_PATH', '/home/creativechain2/src/Creativecoin'); // path to Creativechain executable on this server
 
 } else {
-    define('BITCOIN_PORT', ''); // leave empty to use default port for mainnet/testnet
-    define('BITCOIN_USER', ''); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
-    define('BITCOIN_PASSWORD', ''); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
+    define('BITCOIN_PORT', '17711'); // leave empty to use default port for mainnet/testnet
+    define('BITCOIN_USER', 'Creativecoinrpc'); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
+    define('BITCOIN_PASSWORD', '7T4Es5bEChwDooRqLH8FtpYmiiX'); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
 }
 
 
-define('BTC_FEE', ''); // BTC fee to pay per transaction
-define('BTC_DUST', ''); // omit BTC outputs smaller than this
+define('BTC_FEE', 0.004); // BTC fee to pay per transaction
+define('BTC_DUST', 0.002); // omit BTC outputs smaller than this
 
-define('MAX_BYTES', ''); // maximum bytes in an OP_RETURN (40 as of Bitcoin 0.10)
-define('MAX_BLOCKS', ''); // maximum number of blocks to try when retrieving data
+define('MAX_BYTES', 1000); // maximum bytes in an OP_RETURN (40 as of Bitcoin 0.10)
+define('MAX_BLOCKS', 10); // maximum number of blocks to try when retrieving data
 
 define('NET_TIMEOUT_CONNECT', 5); // how long to time out when connecting to bitcoin node
 define('NET_TIMEOUT_RECEIVE', 10); // how long to time out retrieving data from bitcoin node
 
-define('DATABASE_NAME', ''); //SQLITE database name
+define('DATABASE_NAME', 'creativechain.db'); //SQLITE database name
 
 class RPCClient
 {
