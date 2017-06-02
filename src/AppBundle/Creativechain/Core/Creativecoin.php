@@ -96,7 +96,7 @@ class Creativecoin{
         //	Validate parameters and get change address
 
         if (!$this->rpcClient->check())
-            return array('error' => 'Please check Bitcoin Core is running and OP_RETURN_BITCOIN_* constants are set correctly');
+            return array('error' => 'Please check Bitcoin Core is running and OP_RETURN_BITCOIN_* constants are set correctly ');
 
         $data_len=strlen($data);
         if ($data_len == 0)
@@ -526,50 +526,6 @@ class Creativecoin{
         return $block['txs'];
     }
 
-    public function creadeal($data) {
-        $pubkeys = array();
-
-        foreach($data['addr'] as $key=>$value){
-            //echo $value;
-            $rawtx =  $this->rpcClient->validateAddress($value);
-            //print_r($rawtx);
-            if($rawtx['isvalid'] == 1){
-
-                $multisig[$value] = trim($rawtx['pubkey']);
-                $pubkeys[] = $rawtx['pubkey'];
-            }
-
-
-        }
-        $nsigns = $_POST['datos']['members'];
-
-        $pubk = addslashes(json_encode($pubkeys));
-
-        $args[0] = intval($nsigns);
-        $args[1] = $pubkeys;
-        $request = array(
-            'id' => time().'-'.rand(100000,999999),
-            'method' => "createmultisig",
-            'params' => $args,
-        );
-
-        $port = BITCOIN_PORT;
-        $user = BITCOIN_USER;
-        $password = BITCOIN_PASSWORD;
-
-        $curl = curl_init('http://'.BITCOIN_IP.':'.$port.'/');
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $user.':'.$password);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, NET_TIMEOUT_CONNECT);
-        curl_setopt($curl, CURLOPT_TIMEOUT, NET_TIMEOUT_RECEIVE);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($request));
-        $raw_result = curl_exec($curl);
-        print_R($raw_result);
-        return json_encode($raw_result);
-    }
-
     public function explore() {
 
         echo "EXPLORING CREA BLOCKS .... SYNC ... please wait ... \n";
@@ -632,14 +588,18 @@ class Creativecoin{
         return $this->database->getTransactionsFromAddress($addr);
     }
     public function getAddressPay($dataprice){
-        $address =  $this->rpcClient->getNewAddress();
+        if (!$this->rpcClient->check())
+            return array('error' => 'Please check Bitcoin Core is running and OP_RETURN_BITCOIN_* constants are set correctly ');
+        else{
+            $address =  $this->rpcClient->getNewAddress();
+            $dataprice=json_decode($dataprice);
 
-        $dataprice=json_decode($dataprice);
+            $data_len=ceil(strlen($dataprice)/1000);
+            $fee_price=0.001;
 
-        $data_len=ceil(strlen($dataprice)/1000);
-        $fee_price=0.001;
+            $amount = $data_len*$fee_price;
+            return json_encode(array('address' => $address, 'price' => $amount));
+        }
 
-        $amount = $data_len*$fee_price;
-        return json_encode(array('address' => $address, 'price' => $amount));
     }
 }

@@ -40,15 +40,30 @@ class MessagesController extends Controller
             $em->flush();
         }
     }
+    public function checkCredentials(){
+        $session = new Session();
+        $port = $session->get('port');
+        $user = $session->get('user');
+        $password = $session->get('password');
+        $ip = $session->get('ip');
+        $result = "";
+        if($port && $user && $password && $ip){
+            $result = "ok";
+        }
+        return $result;
+    }
     public function saveDataDirectlyAction(Request $request){
-        if($this->get('session')->get('ip') && $this->get('session')->get('port') && $this->get('session')->get('user') && $this->get('session')->get('password')){
+        if($this->checkCredentials() == 'ok'){
             $data=$request->get('data');
+            $data = json_decode($data);
             if($data->title){
                 $creativecoin = new Creativecoin();
-                $data = json_decode($data);
-                $result = $creativecoin->storeData($data);
-                $ref = $result['ref'];
-                $results = $this->indexInAction($ref,$data->title);
+                var_dump($creativecoin);
+                $results = $creativecoin->storeData($data);
+                if(!$results['error']){
+                    $ref = $results['ref'];
+                    $results = $this->indexIn($ref,$data->title);
+                }
             }else{
                 $results = "missing data";
             }
@@ -82,22 +97,23 @@ class MessagesController extends Controller
         return $response;
     }
     public function generatePayAddressAction(Request $request){
-        if($this->get('session')->get('ip') && $this->get('session')->get('port') && $this->get('session')->get('user') && $this->get('session')->get('password')) {
+        if($this->checkCredentials() == 'ok'){
 
             $json = $request->get('data');
             $addressPay = new Creativecoin();
-            $result = $addressPay->getAddressPay($json);
-            $addessNew = $result['address'];
-            $price = $result['price'];
-            $em = $this->getDoctrine()->getManager();
-            $amount = new amount();
-            $amount->setAddress($addessNew);
-            $amount->setData($json);
-            $amount->setAmount($price);
-            $em->persist($amount);
-            $em->flush();
-            $results = json_encode(array('address' => $addessNew, 'amount' => $price));
-
+            $results = $addressPay->getAddressPay($json);
+            if(!$results['error']){
+                $addessNew = $results['address'];
+                $price = $results['price'];
+                $em = $this->getDoctrine()->getManager();
+                $amount = new amount();
+                $amount->setAddress($addessNew);
+                $amount->setData($json);
+                $amount->setAmount($price);
+                $em->persist($amount);
+                $em->flush();
+                $results = json_encode(array('address' => $addessNew, 'amount' => $price));
+            }
         }else{
             $results = "Credentials not configured";
         }
@@ -109,63 +125,66 @@ class MessagesController extends Controller
 
     public function validatePayAction(Request $request){
         $torna = "";
-        if($this->get('session')->get('ip') && $this->get('session')->get('port') && $this->get('session')->get('user') && $this->get('session')->get('password')) {
+        if($this->checkCredentials() == 'ok'){
             $call = new RPCClient();
 
             $address = $request->get('address');
+            if($address) {
+                $em = $this->getDoctrine()->getManager();
+                $Repo = $em->getRepository("AppBundle:amount");
+                $consulta = $Repo->findOneBy(array('address' => $address));
+                if ($consulta) {
+                    $amount = $consulta->getAmount();
+                    $datos = $consulta->getData();
 
-            $em = $this->getDoctrine()->getManager();
-            $Repo = $em->getRepository("AppBundle:amount");
-            $consulta = $Repo->findOneBy(array('address' => $address));
-            if ($consulta) {
-                $amount = $consulta->getAmount();
-                $datos = $consulta->getData();
+                    $balance = $call->getReceivedByAddress($address);
 
-                $balance = $call->getReceivedByAddress($address);
+                    if ($amount >= $balance) {
+                        $datosdec = json_decode($datos);
+                        $data_len = intval(ceil(strlen($datos) / 1000));
 
-                if ($amount >= $balance) {
-                    $datosdec = json_decode($datos);
-                    $data_len = intval(ceil(strlen($datos) / 1000));
+                        $fee_price = 20000;
+                        $amount = $data_len * $fee_price;
 
-                    $fee_price = 20000;
-                    $amount = $data_len * $fee_price;
-
-                    $creativecoin = new Creativecoin();
-                    if ($amount > 0) {
-                        if ($balance == false) {
-                            $balance = 0;
-                        }
-                        if ($balance >= floatval($amount)) {
-                            $datosT = $creativecoin->storeData($datos);
-                            $transactions = json_encode($datosT);
-                            $datosI = $creativecoin->storeData($datos);
-                            $ref = $datosI['ref'];
-
-                            $index = json_encode($datosI);
-                            $data = json_decode($datos);
-
-                            if (!empty($datos)) {
-                                if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                                    $this->indexInAction($ref, $data->title);
-                                    $em->remove($consulta);
-                                    $em->persist($consulta);
-                                    $em->flush();
-                                }
+                        $creativecoin = new Creativecoin();
+                        if ($amount > 0) {
+                            if ($balance == false) {
+                                $balance = 0;
                             }
-                            $torna = json_encode(array('payment' => 'ok', 'CREA' => floatval($balance) / 1e8, 'price' => floatval($amount) / 1e8, 'transactions' => $transactions, 'ref' => $index, 'data' => $datos));
-                            session_destroy();
-                        }
-                        if ($balance < floatval($amount)) {
-                            $torna = json_encode(array('payment' => 'wait', 'CREA' => floatval($balance) / 1e8, 'price' => floatval($amount) / 1e8));
+                            if ($balance >= floatval($amount)) {
+                                $datosT = $creativecoin->storeData($datos);
+                                $transactions = json_encode($datosT);
+                                $datosI = $creativecoin->storeData($datos);
+                                $ref = $datosI['ref'];
+
+                                $index = json_encode($datosI);
+                                $data = json_decode($datos);
+
+                                if (!empty($datos)) {
+                                    if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                                        $this->indexIn($ref, $data->title);
+                                        $em->remove($consulta);
+                                        $em->persist($consulta);
+                                        $em->flush();
+                                    }
+                                }
+                                $torna = json_encode(array('payment' => 'ok', 'CREA' => floatval($balance) / 1e8, 'price' => floatval($amount) / 1e8, 'transactions' => $transactions, 'ref' => $index, 'data' => $datos));
+                                session_destroy();
+                            }
+                            if ($balance < floatval($amount)) {
+                                $torna = json_encode(array('payment' => 'wait', 'CREA' => floatval($balance) / 1e8, 'price' => floatval($amount) / 1e8));
+                            }
+                        } else {
+                            $torna = json_encode(array('payment' => 'wait', 'CREA' => floatval($balance)));
                         }
                     } else {
-                        $torna = json_encode(array('payment' => 'wait', 'CREA' => floatval($balance)));
+                        $torna = "The amount it's incomplete";
                     }
                 } else {
-                    $torna = "The amount it's incomplete";
+                    $torna = "This Address isn't registered";
                 }
-            } else {
-                $torna = "This Address isn't registered";
+            }else {
+                $torna = "Parameter address is required";
             }
         }else{
             $torna = "Credentials not configured";
@@ -175,13 +194,18 @@ class MessagesController extends Controller
         return $response;
     }
     public function indexAction(Request $request){
-        $ref=$request->get('ref');
-        $word=$request->get('input');
-        $this->indexInAction($ref, $word);
-
+        if($this->checkCredentials() == 'ok') {
+            $ref = $request->get('ref');
+            $word = $request->get('input');
+            $results = $this->indexIn($ref, $word);
+        }else{
+            $results = "Credentials not configured";
+        }
+        $response = new Response(json_encode(array('results' => $results)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
-    public function indexInAction($ref, $word){
-
+    public function indexIn($ref, $word){
         $client = new TrantorCoreController();
         $client->setContainer($this->container);
         $em = $this->getDoctrine()->getManager();
@@ -206,47 +230,53 @@ class MessagesController extends Controller
         } else {
             $results = 'Params invalids.';
         }
-
-        $response = new Response(json_encode(array('results' => $results)));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        
+        return $results;
     }
 
     public function searchAction(Request $request){
-        $client = new TrantorCoreController();
-        $client->setContainer($this->container);
+        if($this->checkCredentials() == 'ok') {
 
-        $send = new MessagesController();
-        $send->setContainer($this->container);
+            $client = new TrantorCoreController();
+            $client->setContainer($this->container);
 
-        $text=$request->get('text');
+            $send = new MessagesController();
+            $send->setContainer($this->container);
 
-        $em = $this->getDoctrine()->getManager();
-        $Repo = $em->getRepository("AppBundle:inputWords");
-        $consulta = $Repo->findOneBy(array('inWords' => $text));
-        $textfiltrat = $client->filtrar($text);
-        if(count($textfiltrat)>1) {
-            foreach ($textfiltrat as $paraulafiltra) {
-                $this->weigth($paraulafiltra, $textfiltrat);
-            }
-        }else{
-            $this->weigth($textfiltrat, $textfiltrat);
-        }
+            $text = $request->get('text');
+            if($text){
+                $em = $this->getDoctrine()->getManager();
+                $Repo = $em->getRepository("AppBundle:inputWords");
+                $consulta = $Repo->findOneBy(array('inWords' => $text));
+                $textfiltrat = $client->filtrar($text);
+                if (count($textfiltrat) > 1) {
+                    foreach ($textfiltrat as $paraulafiltra) {
+                        $this->weigth($paraulafiltra, $textfiltrat);
+                    }
+                } else {
+                    $this->weigth($textfiltrat, $textfiltrat);
+                }
 
-        $torna = $client->iniciarconversacion($text);
+                $torna = $client->iniciarconversacion($text);
 
-        $creativecoin = new Creativecoin();
-        $results = Array();
-        if (!empty($torna)) {
-            foreach ($torna as $una){
-                array_push($results,$creativecoin->getDataFromReference($una));
-            }
-        }else{
-            if($consulta){
-                array_push($results,$creativecoin->getDataFromReference($consulta->getOutFWords()));
+                $creativecoin = new Creativecoin();
+                $results = Array();
+                if (!empty($torna)) {
+                    foreach ($torna as $una) {
+                        array_push($results, $creativecoin->getDataFromReference($una));
+                    }
+                } else {
+                    if ($consulta) {
+                        array_push($results, $creativecoin->getDataFromReference($consulta->getOutFWords()));
+                    } else {
+                        $results = 'No Results';
+                    }
+                }
             }else{
-                $results = 'No Results';
+                $results = "Require param text";
             }
+        }else{
+            $results = "Credentials not configured";
         }
         $response = new Response(json_encode(array('results' => $results)));
         $response->headers->set('Content-Type', 'application/json');

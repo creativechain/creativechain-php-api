@@ -7,19 +7,9 @@
  **************************************************************/
 
 namespace AppBundle\Creativechain\Core;
+use Symfony\Component\HttpFoundation\Session\Session;
 
-define('BITCOIN_IP', ''); // IP address of your bitcoin node
 define('BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
-
-if (BITCOIN_USE_CMD) {
-    define('BITCOIN_PATH', $this->get('session')->get('ip')); // path to Creativechain executable on this server
-
-} else {
-    define('BITCOIN_PORT', $this->get('session')->get('port')); // leave empty to use default port for mainnet/testnet
-    define('BITCOIN_USER', $this->get('session')->get('user')); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
-    define('BITCOIN_PASSWORD', $this->get('session')->get('password')); // leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
-}
-
 
 define('BTC_FEE', 0.004); // BTC fee to pay per transaction
 define('BTC_DUST', 0.002); // omit BTC outputs smaller than this
@@ -43,10 +33,11 @@ class RPCClient
      * RPCClient constructor.
      */
     public function __construct() {
-        $this->port = BITCOIN_PORT;
-        $this->user = BITCOIN_USER;
-        $this->password = BITCOIN_PASSWORD;
-        $this->ip = BITCOIN_IP;
+        $session = new Session();
+        $this->port = $session->get('port');
+        $this->user = $session->get('user');
+        $this->password = $session->get('password');
+        $this->ip = $session->get('ip');
     }
 
     public function getTransaction($txHash) {
