@@ -8,6 +8,7 @@
 
 namespace AppBundle\Creativechain\Core;
 
+use AppBundle\Creativechain\Core\Sorter;
 
 class Creativecoin{
 
