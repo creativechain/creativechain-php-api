@@ -54,12 +54,11 @@ class MessagesController extends Controller
     }
     public function saveDataDirectlyAction(Request $request){
         if($this->checkCredentials() == 'ok'){
-            $data=$request->get('data');
-            $data = json_decode($data);
+            $dataRquest=$request->get('data');
+            $data = json_decode($dataRquest);
             if($data->title){
                 $creativecoin = new Creativecoin();
-                var_dump($creativecoin);
-                $results = $creativecoin->storeData($data);
+                $results = $creativecoin->storeData($dataRquest);
                 if(!$results['error']){
                     $ref = $results['ref'];
                     $results = $this->indexIn($ref,$data->title);
