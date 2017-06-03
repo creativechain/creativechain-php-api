@@ -10,6 +10,7 @@ namespace AppBundle\Creativechain\Core;
 
 use AppBundle\Creativechain\Core\Sorter;
 use AppBundle\Creativechain\Core\TxBuffer;
+use AppBundle\Creativechain\Core\Integers;
 
 class Creativecoin{
 
