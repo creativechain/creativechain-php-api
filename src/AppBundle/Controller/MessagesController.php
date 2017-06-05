@@ -68,22 +68,20 @@ class MessagesController extends Controller
                 $ref = $datosI['ref'];
 
                 $index = json_encode($datosI);
-                $results = json_encode($data);
-                if (!$results['error']) {
+                $results = json_decode($data);
+                //if (!$results['error']) {
                     if (!empty($data)) {
-                        echo "hola";
                         var_dump($datosI);
-                        echo "hola2";
                         var_dump($datosT);
                         if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                            //$results = $creativecoin->storeData($dataRquest);
+//$results = $creativecoin->storeData($dataRquest);
                             //var_dump($results);
                             $results = $this->indexIn($ref, $results->title);
                         }
                     } else {
                         $results = "missing data";
                     }
-                }
+                //}
             }
         }else {
             $results = "Credentials not configured";
