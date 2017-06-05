@@ -54,6 +54,7 @@ class MessagesController extends Controller
     }
     public function saveDataDirectlyAction(Request $request)
     {
+        $results="";
         if ($this->checkCredentials() == 'ok') {
             $dataRquest = $request->get('data');
             $data = json_decode($dataRquest);
@@ -69,25 +70,26 @@ class MessagesController extends Controller
                 $index = json_encode($datosI);
                 $results = json_decode($data);
                 if (!$results['error']) {
-var_dump($datosI);
-var_dump($datosT);
-                        if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                            //$results = $creativecoin->storeData($dataRquest);
-                            //var_dump($results);
-                            $results = $this->indexIn($ref, $data->title);
-                        }
-                    } else {
-                        $results = "missing data";
+                if (!empty($results)) {
+                    var_dump($datosI);
+                    var_dump($datosT);
+                    if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                        //$results = $creativecoin->storeData($dataRquest);
+                        //var_dump($results);
+			$title = json_encode($dataRquest);
+                        $results = $this->indexIn($ref, $title['title']);
                     }
-                
-            } else {
-                $results = "Credentials not configured";
+                } else {
+                    $results = "missing data";
+                }
+              }
             }
-
-            $response = new Response(json_encode(array('results' => $results)));
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
+        }else {
+            $results = "Credentials not configured";
         }
+        $response = new Response(json_encode(array('results' => $results)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
     public function CredentialsAction(Request $request)
     {
@@ -220,6 +222,8 @@ var_dump($datosT);
         return $response;
     }
     public function indexIn($ref, $word){
+	echo $word;
+	echo $ref;
         $client = new TrantorCoreController();
         $client->setContainer($this->container);
         $em = $this->getDoctrine()->getManager();
