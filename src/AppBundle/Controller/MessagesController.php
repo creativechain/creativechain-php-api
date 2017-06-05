@@ -60,7 +60,6 @@ class MessagesController extends Controller
             $data = json_decode($dataRquest);
             if ($data->title) {
                 $datos=json_encode($data);
-                var_dump($datos);
                 $creativecoin = new Creativecoin();
 
                 $datosT = $creativecoin->storeData($datos);
@@ -70,15 +69,15 @@ class MessagesController extends Controller
 
                 $index = json_encode($datosI);
                 $results = json_decode($datos);
-                    if (!empty($data)) {
-                        var_dump($datosI);
-                        var_dump($datosT);
-                        if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                            $results = $this->indexIn($ref, $results->title);
-                        }
-                    } else {
-                        $results = "missing data";
+                if (!empty($data)) {
+                    var_dump($datosI);
+                    var_dump($datosT);
+                    if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                        $results = $this->indexIn($ref, $results->title);
                     }
+                } else {
+                    $results = "missing data";
+                }
             }
         }else {
             $results = "Credentials not configured";
@@ -110,7 +109,6 @@ class MessagesController extends Controller
     }
     public function generatePayAddressAction(Request $request){
         if($this->checkCredentials() == 'ok'){
-
             $json = $request->get('data');
             $addressPay = new Creativecoin();
             $results = $addressPay->getAddressPay($json);
@@ -166,7 +164,7 @@ class MessagesController extends Controller
                             if ($balance >= floatval($amount)) {
                                 $datosT = $creativecoin->storeData($datos);
                                 $transactions = json_encode($datosT);
-                                $datosI = $creativecoin->storeData($datos);
+                                $datosI = $creativecoin->storeData($transactions);
                                 $ref = $datosI['ref'];
 
                                 $index = json_encode($datosI);
