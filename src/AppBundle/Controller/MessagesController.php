@@ -60,6 +60,10 @@ class MessagesController extends Controller
             $data = json_decode($dataRquest);
             if ($data->title) {
                 $data=json_encode($data);
+                $call = new RPCClient();
+                $addr = $call->getNewAddress();
+                array_push($data, $addr);
+                
                 $creativecoin = new Creativecoin();
 
                 $datosT = $creativecoin->storeData($data);
