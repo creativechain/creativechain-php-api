@@ -59,39 +59,26 @@ class MessagesController extends Controller
             $dataRquest = $request->get('data');
             $data = json_decode($dataRquest);
             if ($data->title) {
-                $data=json_encode($data);
-                $call = new RPCClient();
-                $addr = $call->getNewAddress();
-                $myObj = array();
-                $addrmec = "addr:$addr";
-                array_push($myObj, $addrmec);
-                foreach ($data as $key=>$value){
-                    array_push($myObj, "$key:$value");
-                }
-                $datos = json_encode($myObj);
+                $datos=json_encode($data);
                 var_dump($datos);
                 $creativecoin = new Creativecoin();
 
                 $datosT = $creativecoin->storeData($datos);
                 $transactions = json_encode($datosT);
-                $datosI = $creativecoin->storeData($datos);
+                $datosI = $creativecoin->storeData($transactions);
                 $ref = $datosI['ref'];
 
                 $index = json_encode($datosI);
                 $results = json_decode($datos);
-                //if (!$results['error']) {
                     if (!empty($data)) {
                         var_dump($datosI);
                         var_dump($datosT);
                         if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-//$results = $creativecoin->storeData($dataRquest);
-                            //var_dump($results);
                             $results = $this->indexIn($ref, $results->title);
                         }
                     } else {
                         $results = "missing data";
                     }
-                //}
             }
         }else {
             $results = "Credentials not configured";
