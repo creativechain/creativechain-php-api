@@ -11,8 +11,9 @@ namespace AppBundle\Creativechain\Core;
 use AppBundle\Creativechain\Core\Sorter;
 use AppBundle\Creativechain\Core\TxBuffer;
 use AppBundle\Creativechain\Core\Integers;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
-class Creativecoin{
+class Creativecoin extends ContainerAware{
 
     /** @var  RPCClient */
     private $rpcClient;
@@ -21,8 +22,20 @@ class Creativecoin{
     /**
      * Creacoin constructor.
      */
-    public function __construct()  {
-        $this->rpcClient = new RPCClient();
+    public function __construct($btc)  {
+        if($btc == "btc"){
+            $pass = $this->container->getParameter('passCREA');
+            $user = $this->container->getParameter('userCREA');
+            $port = $this->container->getParameter('portCREA');
+            $ip = $this->container->getParameter('ipCREA');
+            $this->rpcClient = new RPCClient($port,$user,$pass,$ip);
+        }else{
+            $pass = $this->container->getParameter('passBTC');
+            $user = $this->container->getParameter('userBTC');
+            $port = $this->container->getParameter('portBTC');
+            $ip = $this->container->getParameter('ipBTC');
+            $this->rpcClient = new RPCClient($port,$user,$pass,$ip);
+        }
     }
     public function getDataFromReference($ref) {
 
@@ -587,6 +600,9 @@ class Creativecoin{
      * @param $addr
      * @return string
      */
+    public function getReceivedByAddress($addr){
+        return $this->rpcClient->getReceivedByAddress($addr);
+    }
     public function getAddress($addr) {
         return $this->database->getTransactionsFromAddress($addr);
     }

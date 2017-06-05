@@ -19,8 +19,8 @@ validatePay:
     requirements:
         _method: GET
 saveDataDirectly:
-    path:  /saveDataDirectly
-    defaults: { _controller: AppBundle\Controller\MessagesController::saveDataDirectlyAction }
+    path:  /save
+    defaults: { _controller: AppBundle\Controller\MessagesController::saveAction }
     requirements:
         _method: GET
 Credentials:

@@ -7,6 +7,15 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    passBTC:  "%pass_btc%"
+    userBTC:  "%user_btc%"
+    portBTC:  "%port_btc%"
+    ipBTC:    "%ip_btc%"
+    passCREA:  "%pass_crea%"
+    userCREA:  "%user_crea%"
+    portCREA:  "%port_crea%"
+    ipCREA:    "%ip_crea%"
+
 framework:
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
@@ -85,4 +94,7 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+
+
 

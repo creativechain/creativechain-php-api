@@ -7,6 +7,7 @@
  **************************************************************/
 
 namespace AppBundle\Creativechain\Core;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 define('BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
@@ -32,12 +33,12 @@ class RPCClient
     /**
      * RPCClient constructor.
      */
-    public function __construct() {
+    public function __construct($port, $user, $pass, $ip) {
         $session = new Session();
-        $this->port = $session->get('port');
-        $this->user = $session->get('user');
-        $this->password = $session->get('password');
-        $this->ip = $session->get('ip');
+        $this->port = $port;
+        $this->user = $user;
+        $this->password = $pass;
+        $this->ip = $ip;
     }
 
     public function getTransaction($txHash) {
