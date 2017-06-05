@@ -52,27 +52,40 @@ class MessagesController extends Controller
         }
         return $result;
     }
-    public function saveDataDirectlyAction(Request $request){
-        if($this->checkCredentials() == 'ok'){
-            $dataRquest=$request->get('data');
+    public function saveDataDirectlyAction(Request $request)
+    {
+        if ($this->checkCredentials() == 'ok') {
+            $dataRquest = $request->get('data');
             $data = json_decode($dataRquest);
-            if($data->title){
+            if ($data->title) {
                 $creativecoin = new Creativecoin();
-                $results = $creativecoin->storeData($dataRquest);
-                if(!$results['error']){
-                    $ref = $results['ref'];
-                    $results = $this->indexIn($ref,$data->title);
-                }
-            }else{
-                $results = "missing data";
-            }
-        }else{
-            $results = "Credentials not configured";
-        }
 
-        $response = new Response(json_encode(array('results' => $results)));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+                $datosT = $creativecoin->storeData($data);
+                $transactions = json_encode($datosT);
+                $datosI = $creativecoin->storeData($data);
+                $ref = $datosI['ref'];
+
+                $index = json_encode($datosI);
+                $results = json_decode($data);
+                if (!$results['error']) {
+                    if (!empty($results)) {
+                        if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                            //$results = $creativecoin->storeData($dataRquest);
+                            //var_dump($results);
+                            $results = $this->indexIn($ref, $data->title);
+                        }
+                    } else {
+                        $results = "missing data";
+                    }
+                }
+            } else {
+                $results = "Credentials not configured";
+            }
+
+            $response = new Response(json_encode(array('results' => $results)));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
     }
     public function CredentialsAction(Request $request)
     {
@@ -229,7 +242,7 @@ class MessagesController extends Controller
         } else {
             $results = 'Params invalids.';
         }
-        
+
         return $results;
     }
 

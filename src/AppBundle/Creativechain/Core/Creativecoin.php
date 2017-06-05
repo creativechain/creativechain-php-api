@@ -129,7 +129,7 @@ class Creativecoin{
 
             $last_txn = (($data_ptr+MAX_BYTES) >= $data_len); // is this the last tx in the chain?
             $change_amount = $input_amount-BTC_FEE;
-            print_r($change_amount);
+            //print_r($change_amount);
             $metadata = substr($data, $data_ptr, MAX_BYTES-6);
             $metadata = "-CREA-".$metadata;
 
@@ -535,19 +535,19 @@ class Creativecoin{
 
         $lastblock = $this->database->getAddressesTransactions(0, 1);
 
-        print_r($lastblock);
+        //print_r($lastblock);
         if(!empty($lastblock['block'])){
 
             $block = $lastblock['block'];
 
             $blocks =  $this->rpcClient->listSinceBlock($block);
-            print_r($blocks);
+            //print_r($blocks);
         }else{
             $startHash = $this->rpcClient->getBlockHash(0);
             $blocks = $this->rpcClient->listSinceBlock($startHash);
         }
 
-        print_r($blocks);
+        //print_r($blocks);
         foreach($blocks['transactions'] as $key=>$value){
 
             $txdata = $this->rpcClient->getTransaction($value['txid']);
@@ -564,10 +564,10 @@ class Creativecoin{
                 $txdata = $this->getDataFromReference($value['txid']);
 
                 $decodata = json_decode("[".$txdata."]");
-                print_r($decodata);
+                //print_r($decodata);
                 if(!empty($decodata[0]->contract)){
                     $this->database->addContractTransaction($decodata[0]->tx, $value['txid'], '', $value['time'], $decodata[0]->contract, $txdata);
-                    print_R($decodata);
+                    //print_R($decodata);
                 }
 
             }
