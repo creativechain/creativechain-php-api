@@ -58,6 +58,7 @@ class MessagesController extends Controller
             $dataRquest = $request->get('data');
             $data = json_decode($dataRquest);
             if ($data->title) {
+		$data=json_encode($data);
                 $creativecoin = new Creativecoin();
 
                 $datosT = $creativecoin->storeData($data);
@@ -68,7 +69,8 @@ class MessagesController extends Controller
                 $index = json_encode($datosI);
                 $results = json_decode($data);
                 if (!$results['error']) {
-                    if (!empty($results)) {
+var_dump($datosI);
+var_dump($datosT);
                         if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
                             //$results = $creativecoin->storeData($dataRquest);
                             //var_dump($results);
@@ -77,7 +79,7 @@ class MessagesController extends Controller
                     } else {
                         $results = "missing data";
                     }
-                }
+                
             } else {
                 $results = "Credentials not configured";
             }
