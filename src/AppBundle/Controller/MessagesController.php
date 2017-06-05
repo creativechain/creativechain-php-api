@@ -62,19 +62,23 @@ class MessagesController extends Controller
                 $data=json_encode($data);
                 $call = new RPCClient();
                 $addr = $call->getNewAddress();
-                $myObj = array($data);
+                $myObj = array();
                 $addrmec = "addr:$addr";
                 array_push($myObj, $addrmec);
-                var_dump($myObj);
+                foreach ($data as $key=>$value){
+                    array_push($myObj, "$key:$value");
+                }
+                $datos = json_encode($myObj);
+                var_dump($datos);
                 $creativecoin = new Creativecoin();
 
-                $datosT = $creativecoin->storeData($myObj);
+                $datosT = $creativecoin->storeData($datos);
                 $transactions = json_encode($datosT);
-                $datosI = $creativecoin->storeData($myObj);
+                $datosI = $creativecoin->storeData($datos);
                 $ref = $datosI['ref'];
 
                 $index = json_encode($datosI);
-                $results = json_decode($myObj);
+                $results = json_decode($datos);
                 //if (!$results['error']) {
                     if (!empty($data)) {
                         var_dump($datosI);
