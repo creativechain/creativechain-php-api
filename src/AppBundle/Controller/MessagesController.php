@@ -59,7 +59,7 @@ class MessagesController extends Controller
             $dataRquest = $request->get('data');
             $data = json_decode($dataRquest);
             if ($data->title) {
-		$data=json_encode($data);
+                $data=json_encode($data);
                 $creativecoin = new Creativecoin();
 
                 $datosT = $creativecoin->storeData($data);
@@ -68,21 +68,20 @@ class MessagesController extends Controller
                 $ref = $datosI['ref'];
 
                 $index = json_encode($datosI);
-                $results = json_decode($data);
+                $results = json_encode($data);
                 if (!$results['error']) {
-                if (!empty($results)) {
-                    var_dump($datosI);
-                    var_dump($datosT);
-                    if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                        //$results = $creativecoin->storeData($dataRquest);
-                        //var_dump($results);
-			$title = json_encode($dataRquest);
-                        $results = $this->indexIn($ref, $title['title']);
+                    if (!empty($data)) {
+                        var_dump($datosI);
+                        var_dump($datosT);
+                        if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                            //$results = $creativecoin->storeData($dataRquest);
+                            //var_dump($results);
+                            $results = $this->indexIn($ref, $results->title);
+                        }
+                    } else {
+                        $results = "missing data";
                     }
-                } else {
-                    $results = "missing data";
                 }
-              }
             }
         }else {
             $results = "Credentials not configured";
@@ -222,8 +221,8 @@ class MessagesController extends Controller
         return $response;
     }
     public function indexIn($ref, $word){
-	echo $word;
-	echo $ref;
+        echo $word;
+        echo $ref;
         $client = new TrantorCoreController();
         $client->setContainer($this->container);
         $em = $this->getDoctrine()->getManager();
