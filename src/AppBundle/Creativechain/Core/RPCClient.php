@@ -34,7 +34,7 @@ class RPCClient
      * RPCClient constructor.
      */
     public function __construct($port, $user, $pass, $ip) {
-        $session = new Session();
+        //$session = new Session();
         $this->port = $port;
         $this->user = $user;
         $this->password = $pass;

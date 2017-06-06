@@ -60,7 +60,6 @@ class MessagesController extends Controller
         if ($data->title) {
             $datos=json_encode($data);
             $creativecoin = $this->Credentials('crea');
-
             $datosT = $creativecoin->storeData($datos);
             $transactions = json_encode($datosT);
             $datosI = $creativecoin->storeData($transactions);
@@ -101,7 +100,7 @@ class MessagesController extends Controller
     }
     public function generatePayAddressAction(Request $request){
         $json = $request->get('data');
-        $addressPay = $this->Credentials('crea');
+        $addressPay = $this->Credentials('btc');
 
         $results = $addressPay->getAddressPay($json);
         if(!$results['error']){

@@ -11,6 +11,8 @@ namespace AppBundle\Creativechain\Core;
 use AppBundle\Creativechain\Core\Sorter;
 use AppBundle\Creativechain\Core\TxBuffer;
 use AppBundle\Creativechain\Core\Integers;
+use AppBundle\Creativechain\Core\RPCClient;
+
 
 
 class Creativecoin{
@@ -23,8 +25,11 @@ class Creativecoin{
      * Creacoin constructor.
      */
     public function __construct($port,$user,$pass,$ip)  {
-            $this->rpcClient = new RPCClient($port,$user,$pass,$ip);
+
+        $this->rpcClient = new RPCClient($port,$user,$pass,$ip);
+
     }
+
     public function getDataFromReference($ref) {
 
         $decoraw = $this->rpcClient->getTransaction($ref);
