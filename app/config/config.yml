@@ -7,14 +7,6 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    passBTC:  "%pass_btc%"
-    userBTC:  "%user_btc%"
-    portBTC:  "%port_btc%"
-    ipBTC:    "%ip_btc%"
-    passCREA:  "%pass_crea%"
-    userCREA:  "%user_crea%"
-    portcrea:  "%port_crea%"
-    ipCREA:    "%ip_crea%"
 
 framework:
     #esi: ~

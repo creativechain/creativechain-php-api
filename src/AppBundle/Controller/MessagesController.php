@@ -86,15 +86,15 @@ class MessagesController extends Controller
     public function Credentials($btc)
     {
         if($btc == "btc"){
-            $pass = $this->getParameter('passBTC');
-            $user = $this->getParameter('userBTC');
-            $port = $this->getParameter('portBTC');
-            $ip = $this->getParameter('ipBTC');
+            $pass = $this->getParameter('pass_btc');
+            $user = $this->getParameter('user_btc');
+            $port = $this->getParameter('port_btc');
+            $ip = $this->getParameter('ip_btc');
         }else {
-            $port = $this->getParameter('portcrea');
-            $ip = $this->getParameter('ipCREA');
-            $pass = $this->getParameter('passCREA');
-            $user = $this->getParameter('userCREA');
+            $port = $this->getParameter('port_crea');
+            $ip = $this->getParameter('ip_crea');
+            $pass = $this->getParameter('pass_crea');
+            $user = $this->getParameter('user_crea');
         }
         $response = new Creativecoin($port,$user,$pass,$ip);
         return $response;
