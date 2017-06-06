@@ -40,18 +40,7 @@ class MessagesController extends Controller
             $em->flush();
         }
     }
-    public function checkCredentials(){
-        $session = new Session();
-        $port = $session->get('port');
-        $user = $session->get('user');
-        $password = $session->get('password');
-        $ip = $session->get('ip');
-        $result = "";
-        if($port && $user && $password && $ip){
-            $result = "ok";
-        }
-        return $result;
-    }
+
     public function saveAction(Request $request)
     {
         $results="";
@@ -63,19 +52,23 @@ class MessagesController extends Controller
             $datosT = $creativecoin->storeData($datos);
             $transactions = json_encode($datosT);
             $datosI = $creativecoin->storeData($transactions);
-            $ref = $datosI['ref'];
-
-            $index = json_encode($datosI);
-            $results = json_decode($datos);
-            if (!empty($data)) {
-                var_dump($datosI);
-                var_dump($datosT);
-                if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                    $results = $this->indexIn($ref, $results->title);
+            if(!$datosI['error']){
+                $ref = $datosI['ref'];
+                $index = json_encode($datosI);
+                $results = json_decode($datos);
+                if (!empty($data)) {
+                    var_dump($datosI);
+                    var_dump($datosT);
+                    if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                        $results = $this->indexIn($ref, $results->title);
+                    }
+                } else {
+                    $results = "missing data";
                 }
-            } else {
-                $results = "missing data";
+            }else{
+                $results = $datosI['error'];
             }
+
         }
 
         $response = new Response(json_encode(array('results' => $results)));
@@ -104,8 +97,12 @@ class MessagesController extends Controller
 
         $results = $addressPay->getAddressPay($json);
         if(!$results['error']){
-            $addessNew = $results['address'];
-            $price = $results['price'];
+            $addessNew = $results['result'];
+
+            $data_len=ceil(strlen($json)/1000);
+            $fee_price=0.001;
+            $price = $data_len*$fee_price;
+
             $em = $this->getDoctrine()->getManager();
             $amount = new amount();
             $amount->setAddress($addessNew);
