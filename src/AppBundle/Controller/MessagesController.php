@@ -120,7 +120,6 @@ class MessagesController extends Controller
     }
 
     public function validatePayAction(Request $request){
-        $prova = $this->container->getParameter('passBTC');
         $torna = "";
         $address = $request->get('address');
         if($address) {
