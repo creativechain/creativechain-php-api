@@ -31,7 +31,8 @@ class Creativecoin{
     }
 
     public function getDataFromReference($ref) {
-
+ if (!$this->rpcClient->check())
+            return array('error' => 'Please check Bitcoin Core is running and OP_RETURN_BITCOIN_* constants are set correctly ');
         $decoraw = $this->rpcClient->getTransaction($ref);
         $txdata = '';
         foreach($decoraw['result']['vout'] as $key=>$value){
@@ -610,7 +611,7 @@ class Creativecoin{
             $fee_price=0.001;
 
             $amount = $data_len*$fee_price;
-            return json_encode(array('address' => $address, 'price' => $amount));
+            return json_encode(array('address' => $address['result'], 'price' => $amount));
         }
 
     }

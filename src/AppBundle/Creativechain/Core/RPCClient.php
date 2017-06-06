@@ -102,7 +102,7 @@ class RPCClient
         return $this->buildExecution('validateaddress', array($address));
     }
     public function getNewAddress() {
-        return $this->buildExecution('getnewaddress', array(0));
+        return $this->buildExecution('getnewaddress', array());
     }
     public function getReceivedByAddress($address) {
         return $this->buildExecution('getreceivedbyaddress', array($address));
