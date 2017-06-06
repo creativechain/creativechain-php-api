@@ -11,11 +11,9 @@ namespace AppBundle\Creativechain\Core;
 use AppBundle\Creativechain\Core\Sorter;
 use AppBundle\Creativechain\Core\TxBuffer;
 use AppBundle\Creativechain\Core\Integers;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-class Creativecoin extends Controller{
+class Creativecoin{
 
     /** @var  RPCClient */
     private $rpcClient;
