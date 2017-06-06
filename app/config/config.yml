@@ -13,7 +13,7 @@ parameters:
     ipBTC:    "%ip_btc%"
     passCREA:  "%pass_crea%"
     userCREA:  "%user_crea%"
-    portCREA:  "%port_crea%"
+    portcrea:  "%port_crea%"
     ipCREA:    "%ip_crea%"
 
 framework:

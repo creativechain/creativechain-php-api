@@ -91,7 +91,7 @@ class MessagesController extends Controller
             $port = $this->getParameter('portBTC');
             $ip = $this->getParameter('ipBTC');
         }else {
-            $port = $this->getParameter('portCREA');
+            $port = $this->getParameter('portcrea');
             $ip = $this->getParameter('ipCREA');
             $pass = $this->getParameter('passCREA');
             $user = $this->getParameter('userCREA');
