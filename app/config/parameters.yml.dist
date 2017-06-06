@@ -18,11 +18,11 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret: ThisTokenIsNotSoSecretChangeIt
 
-     pass_btc:  PassHost
-     user_btc:  UserHost
-     port_btc:  PassHost
-     ip_btc:    127.0.0.1
-     pass_crea: PassHost
-     user_crea: UserHost
-     port_crea: PortHost
-     ip_crea:   127.0.0.1
+    pass_btc:  xxxxxxx
+    user_btc:  UserHost
+    port_btc:  PortHost
+    ip_btc:    127.0.0.1
+    pass_crea: xxxxxxx
+    user_crea: UserHost
+    port_crea: PortHost
+    ip_crea:   127.0.0.1
