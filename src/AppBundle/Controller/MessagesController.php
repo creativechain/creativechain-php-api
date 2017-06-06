@@ -59,7 +59,7 @@ class MessagesController extends Controller
         $data = json_decode($dataRquest);
         if ($data->title) {
             $datos=json_encode($data);
-            $creativecoin = new Creativecoin("crea");
+            $creativecoin = $this->Credentials('crea');
 
             $datosT = $creativecoin->storeData($datos);
             $transactions = json_encode($datosT);
@@ -83,30 +83,26 @@ class MessagesController extends Controller
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
-    public function CredentialsAction(Request $request)
+    public function Credentials($btc)
     {
-        $session = new Session();
-        $session->clear();
-        $session->start();
-
-        $ip=$request->get('ip');
-        $port=$request->get('port');
-        $user=$request->get('user');
-        $password=$request->get('password');
-
-        // set and get session attributes
-        $session->set('ip', $ip);
-        $session->set('port', $port);
-        $session->set('user', $user);
-        $session->set('password', $password);
-
-        $response = new Response(json_encode(array('results' => 'Ok')));
-        $response->headers->set('Content-Type', 'application/json');
+        if($btc == "btc"){
+            $pass = $this->container->getParameter('passBTC');
+            $user = $this->container->getParameter('userBTC');
+            $port = $this->container->getParameter('portBTC');
+            $ip = $this->container->getParameter('ipBTC');
+        }else {
+            $port = $this->container->getParameter('portCREA');
+            $ip = $this->container->getParameter('ipCREA');
+            $pass = $this->container->getParameter('passCREA');
+            $user = $this->container->getParameter('userCREA');
+        }
+        $response = new Creativecoin($port,$user,$pass,$ip);
         return $response;
     }
     public function generatePayAddressAction(Request $request){
         $json = $request->get('data');
-        $addressPay = new Creativecoin("btc");
+        $addressPay = $this->Credentials('crea');
+
         $results = $addressPay->getAddressPay($json);
         if(!$results['error']){
             $addessNew = $results['address'];
@@ -138,7 +134,8 @@ class MessagesController extends Controller
             if ($consulta) {
                 $amount = $consulta->getAmount();
                 $datos = $consulta->getData();
-                $bitcoin = new Creativecoin("btc");
+                $bitcoin = $this->Credentials('btc');
+
                 $balance = $bitcoin->getReceivedByAddress($address);
 
                 if ($amount >= $balance) {
@@ -148,7 +145,8 @@ class MessagesController extends Controller
                     $fee_price = 20000;
                     $amount = $data_len * $fee_price;
 
-                    $creativecoin = new Creativecoin("crea");
+                    $creativecoin = $this->Credentials('crea');
+
                     if ($amount > 0) {
                         if ($balance == false) {
                             $balance = 0;
@@ -254,8 +252,8 @@ class MessagesController extends Controller
             }
 
             $torna = $client->iniciarconversacion($text);
+            $creativecoin = $this->Credentials('crea');
 
-            $creativecoin = new Creativecoin("crea");
             $results = Array();
             if (!empty($torna)) {
                 foreach ($torna as $una) {

@@ -11,9 +11,11 @@ namespace AppBundle\Creativechain\Core;
 use AppBundle\Creativechain\Core\Sorter;
 use AppBundle\Creativechain\Core\TxBuffer;
 use AppBundle\Creativechain\Core\Integers;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Creativecoin extends ContainerAware{
+
+class Creativecoin extends Controller{
 
     /** @var  RPCClient */
     private $rpcClient;
@@ -22,20 +24,8 @@ class Creativecoin extends ContainerAware{
     /**
      * Creacoin constructor.
      */
-    public function __construct($btc)  {
-        if($btc == "btc"){
-            $pass = $this->container->getParameter('passCREA');
-            $user = $this->container->getParameter('userCREA');
-            $port = $this->container->getParameter('portCREA');
-            $ip = $this->container->getParameter('ipCREA');
+    public function __construct($port,$user,$pass,$ip)  {
             $this->rpcClient = new RPCClient($port,$user,$pass,$ip);
-        }else{
-            $pass = $this->container->getParameter('passBTC');
-            $user = $this->container->getParameter('userBTC');
-            $port = $this->container->getParameter('portBTC');
-            $ip = $this->container->getParameter('ipBTC');
-            $this->rpcClient = new RPCClient($port,$user,$pass,$ip);
-        }
     }
     public function getDataFromReference($ref) {
 
