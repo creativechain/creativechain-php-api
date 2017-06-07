@@ -23,4 +23,8 @@ saveDataDirectly:
     defaults: { _controller: AppBundle\Controller\MessagesController::saveAction }
     requirements:
         _method: GET
-
+find:
+    path:  /find
+    defaults: { _controller: AppBundle\Controller\MessagesController::findAction }
+    requirements:
+        _method: GET

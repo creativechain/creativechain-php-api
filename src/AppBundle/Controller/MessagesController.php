@@ -224,6 +224,44 @@ class MessagesController extends Controller
         return $results;
     }
 
+    public function findAction(Request $request){
+        $word = $request->get('word');
+        $page = $request->get('page');
+        $myLimit = 30;
+
+        if(!$page){
+            $myOffset = 0;
+        }else{
+            $myOffset = $page*$myLimit;
+        }
+        if($word){
+            $em = $this->getDoctrine()->getManager();
+            $Repo = $em->getRepository("AppBundle:inputWords");
+            $consulta = $Repo->findBy(array('inWords' => $word),
+                array('price' => 'ASC'),
+                $myLimit,
+                $myOffset);
+        }else{
+            $em = $this->getDoctrine()->getManager();
+            $Repo = $em->getRepository("AppBundle:inputWords");
+            $consulta = $Repo->findBy(array(),array(),
+                $myLimit,
+                $myOffset);
+        }
+
+        $results = Array();
+        if($consulta){
+            foreach ($consulta as $one){
+                $creativecoin = $this->Credentials('crea');
+                array_push($results, $creativecoin->getDataFromReference($one));
+            }
+        }
+        $response = new Response(json_encode(array('results' => $results)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    }
+
     public function searchAction(Request $request){
 
         $client = new TrantorCoreController();
