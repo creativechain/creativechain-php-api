@@ -225,7 +225,7 @@ class MessagesController extends Controller
     }
 
     public function findAction(Request $request){
-        $word = $request->get('word');
+        $word = $request->get('text');
         $page = $request->get('page');
         $myLimit = 30;
 
@@ -234,11 +234,11 @@ class MessagesController extends Controller
         }else{
             $myOffset = $page*$myLimit;
         }
-        if($word){
+        if($word != 'all'){
             $em = $this->getDoctrine()->getManager();
             $Repo = $em->getRepository("AppBundle:inputWords");
             $consulta = $Repo->findBy(array('inWords' => $word),
-                array('price' => 'ASC'),
+                array('inWords' => 'ASC'),
                 $myLimit,
                 $myOffset);
         }else{
@@ -258,8 +258,11 @@ class MessagesController extends Controller
         }
         $response = new Response(json_encode(array('results' => $results)));
         $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept');
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
 
+        return $response;
     }
 
     public function searchAction(Request $request){
