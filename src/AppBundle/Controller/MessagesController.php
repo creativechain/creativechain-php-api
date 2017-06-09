@@ -46,7 +46,7 @@ class MessagesController extends Controller
         $results="";
         $dataRquest = $request->get('data');
         $data = json_decode($dataRquest);
-        if ($data->title) {
+        if (!empty($data)) {
             $datos=json_encode($data);
             $creativecoin = $this->Credentials('crea');
             $datosT = $creativecoin->storeData($datos);
@@ -56,19 +56,16 @@ class MessagesController extends Controller
                 $ref = $datosI['ref'];
                 $index = json_encode($datosI);
                 $results = json_decode($datos);
-                if (!empty($data)) {
-                    var_dump($datosI);
-                    var_dump($datosT);
-                    if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                        $results = $this->indexIn($ref, $results->title);
-                    }
-                } else {
-                    $results = "missing data";
+                var_dump($datosI);
+                var_dump($datosT);
+                if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
+                    $results = $this->indexIn($ref, $results->title);
                 }
             }else{
                 $results = $datosI['error'];
             }
-
+        }else {
+            $results = "missing data";
         }
 
         $response = new Response(json_encode(array('results' => $results)));
