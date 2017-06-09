@@ -11,6 +11,7 @@ This Library is to search and save in blockchain.
 * `cd trantor`
 * `composer update`
 * `php bin/console doctrine:schema:create`
+* `put your credentials in parameters.yml`
 
 
 **USAGE**

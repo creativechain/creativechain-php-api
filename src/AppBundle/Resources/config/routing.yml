@@ -1,3 +1,9 @@
+landing_homepage:
+    path:     /
+    defaults: { _controller: LandingBundle:Default:index }
+    requirements:
+        _method: GET
+
 Search:
     path:  /search
     defaults: { _controller: AppBundle\Controller\MessagesController::searchAction }
@@ -23,4 +29,8 @@ saveDataDirectly:
     defaults: { _controller: AppBundle\Controller\MessagesController::saveAction }
     requirements:
         _method: GET
-
+find:
+    path:  /find
+    defaults: { _controller: AppBundle\Controller\MessagesController::findAction }
+    requirements:
+        _method: GET

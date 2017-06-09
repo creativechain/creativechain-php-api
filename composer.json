@@ -13,6 +13,7 @@
         "doctrine/orm": "^2.4.8",
         "friendsofsymfony/rest-bundle": "^1.7",
         "incenteev/composer-parameter-handler": "~2.0",
+        "nelmio/cors-bundle": "^1.5",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/assetic-bundle": "~2.3",
