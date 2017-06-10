@@ -40,6 +40,13 @@ class MessagesController extends Controller
             $em->flush();
         }
     }
+    function checkAction(){
+        $creativecoin = $this->Credentials('crea');
+        $results = $creativecoin->check();
+        $response = new Response(json_encode(array('results' => $results)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
     public function saveAction(Request $request)
     {

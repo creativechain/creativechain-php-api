@@ -3,7 +3,11 @@ landing_homepage:
     defaults: { _controller: LandingBundle:Default:index }
     requirements:
         _method: GET
-
+Check:
+    path:  /check
+    defaults: { _controller: AppBundle\Controller\MessagesController::checkAction }
+    requirements:
+        _method: GET
 Search:
     path:  /search
     defaults: { _controller: AppBundle\Controller\MessagesController::searchAction }

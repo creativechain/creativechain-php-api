@@ -602,6 +602,13 @@ class Creativecoin{
     public function getAddress($addr) {
         return $this->database->getTransactionsFromAddress($addr);
     }
+    public function check(){
+        if (!$this->rpcClient->check())
+            return array('error' => 'Please check Bitcoin Core is running and OP_RETURN_BITCOIN_* constants are set correctly ');
+        else{
+            return array('ok' => 'Bitcoin Core is running');
+        }
+    }
     public function getAddressPay($dataprice){
         if (!$this->rpcClient->check())
             return array('error' => 'Please check Bitcoin Core is running and OP_RETURN_BITCOIN_* constants are set correctly ');

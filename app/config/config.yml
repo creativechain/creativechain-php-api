@@ -9,6 +9,9 @@ parameters:
     locale: en
 
 framework:
+    request:
+        formats:
+            jsonp: 'application/javascript'
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
