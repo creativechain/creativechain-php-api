@@ -66,7 +66,14 @@ class MessagesController extends Controller
                 var_dump($datosI);
                 var_dump($datosT);
                 if (strlen($datosI['ref']) > 2 and strlen($datosT['ref']) > 2) {
-                    $results = $this->indexIn($ref, $results->title);
+                    $client = new TrantorCoreController();
+                    $words = $client->filtrar($data->title);
+                    $exwords = explode(" ", $words);
+                    $cc = 0;
+                    foreach ($exwords as $key => $value) {
+                        $results = $this->indexIn($ref, $value);
+                        $cc++;
+                    }
                 }
             }else{
                 $results = $datosI['error'];
@@ -86,11 +93,12 @@ class MessagesController extends Controller
             $user = $this->getParameter('user_btc');
             $port = $this->getParameter('port_btc');
             $ip = $this->getParameter('ip_btc');
-        }else {
+        }else{
             $port = $this->getParameter('port_crea');
             $ip = $this->getParameter('ip_crea');
             $pass = $this->getParameter('pass_crea');
             $user = $this->getParameter('user_crea');
+            echo $port;
         }
         $response = new Creativecoin($port,$user,$pass,$ip);
         return $response;
