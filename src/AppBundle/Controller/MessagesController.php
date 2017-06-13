@@ -20,6 +20,7 @@ use AppBundle\Creativechain\Core\Creativecoin;
 use AppBundle\Creativechain\Core\RPCClient;
 use AppBundle\Creativechain\Core;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class MessagesController extends Controller
@@ -223,6 +224,7 @@ class MessagesController extends Controller
                 $input->setInFWords($filtrarIn);
                 $input->setOutFWords($ref);
                 $input->setPermiso("yes");
+                $input->setBlockdate(new DateTime());
                 $em->persist($input);
                 $em->flush();
                 $results = 'OK';

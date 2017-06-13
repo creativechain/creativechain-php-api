@@ -43,12 +43,31 @@ class inputWords
      * @ORM\Column(type="string" , nullable=true)
      */
     protected $permiso;
-
+    /**
+     * @ORM\Column(type="datetime" , nullable=true)
+     */
+    protected $blockdate;
 
     public function __construct()
     {
         $this->user = new ArrayCollection();
         // your own logic
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBlockdate()
+    {
+        return $this->blockdate;
+    }
+
+    /**
+     * @param mixed $blockdate
+     */
+    public function setBlockdate($blockdate)
+    {
+        $this->blockdate = $blockdate;
     }
 
     /**
