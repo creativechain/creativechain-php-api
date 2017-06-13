@@ -99,7 +99,7 @@ class MessagesController extends Controller
             $ip = $this->getParameter('ip_crea');
             $pass = $this->getParameter('pass_crea');
             $user = $this->getParameter('user_crea');
-            echo $port;
+            //echo $port;
         }
         $response = new Creativecoin($port,$user,$pass,$ip);
         return $response;
